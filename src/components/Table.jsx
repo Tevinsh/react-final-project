@@ -1,12 +1,8 @@
 import { useDispatch } from "react-redux";
-
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 import setPerson from "../store/actions/personAction";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-const MySwal = withReactContent(Swal)
+import { afterError, afterSuccess, promptDelete } from "./SweetAlert";
 
 const Table = () => {
     const person = useSelector((state)=>state.person)
@@ -14,43 +10,12 @@ const Table = () => {
     const navigate = useNavigate();
     const dummyKota = ['Jakarta','Bandung','Surabaya','Medan','Aceh','Palembang']
 
-    const afterSuccess = (message) =>{
-        dispatch(setPerson());
-        MySwal.fire({
-            icon: 'success',
-            title: 'Sukses',
-            text: message,
-            showConfirmButton: false,
-            timer: 2000
-        })
-    }
-
-    const afterError = (message) =>{
-        dispatch(setPerson());
-        MySwal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: message,
-            showConfirmButton: false,
-            timer: 2000
-        })
-    }
-
     const handleDelete = (event) => {
-        MySwal.fire({
-            icon: "warning",
-            title: "Are you sure?",
-            text: "This action cannot be undone",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: '#DD6B55',
-            confirmButtonText: 'Yes',
-            cancelButtonText: "Cancel"
-         }).then((action)=>{
+         promptDelete().then((action)=>{
              if(action.isConfirmed){
                 fetch(`https://flask-api-final-project.herokuapp.com/keys/${event.target.value}`, {
                     method: "DELETE"
-                    }).then(response => response.ok ? afterSuccess(`berhasil menghapus data key ${event.target.value}`) :afterError("error while deleting"));
+                    }).then(response => response.ok ? (afterSuccess(`berhasil menghapus data key ${event.target.value}`),dispatch(setPerson())):afterError("error while deleting"));
              }
          })
     }

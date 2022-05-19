@@ -2,11 +2,8 @@ import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Header from "../components/Header";
+import { afterError, afterSuccess } from "../components/SweetAlert";
 
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-
-const MySwal = withReactContent(Swal)
 
 const warning_icon = <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -31,33 +28,13 @@ const EditPerson = () => {
     } = useForm();
     const onSubmit = data => handleEdit(data);
 
-    const MySwalSuccess = () => {
-        MySwal.fire({
-            icon: 'success',
-            title: 'Sukses',
-            text: 'Anda Berhasil Mengubah data dari id '+ key,
-            showConfirmButton: false,
-            timer: 2000
-        })
-        navigate('/',{replace:true});
-    }
-    const MySwalError = () => {
-        MySwal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Data tidak diubah',
-            showConfirmButton: false,
-            timer: 2000
-        })
-    }
-
     const handleEdit = (data) => {
         fetch(`https://flask-api-final-project.herokuapp.com/keys/${key}`, {
                 method: "PUT",
                 body: JSON.stringify(data),
                 headers: {"Content-type": "application/json; charset=UTF-8"}
                 })
-                .then(res => res.ok? MySwalSuccess() :MySwalError())
+                .then(res => res.ok? (afterSuccess('Anda Berhasil Mengubah data dari id '+ key),navigate('/',{replace:true})) :afterError('Data tidak diubah'))
     }
     return (
         <>

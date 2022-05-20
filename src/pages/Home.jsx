@@ -1,8 +1,6 @@
-import { useEffect } from "react";
 import Header from "../components/Header"
 import Table from "../components/Table";
-import { useDispatch,useSelector } from 'react-redux'
-import setPerson from "../store/actions/personAction";
+
 
 const Home = () => {
     document.title="Home";

@@ -15,7 +15,7 @@ const EditPerson = () => {
     const navigate = useNavigate();
     useEffect(()=>{
         fetch(`https://flask-api-final-project.herokuapp.com/keys/${key}`)
-        .then(result => result.json())
+        .then(res => res.ok? res.json():(afterError(`${key} tidak berhasil ditemukan`),navigate('/',{replace:true})))
         .then(data=>{
             setValue("firstName", data.firstName)
             setValue("lastName", data.lastName)

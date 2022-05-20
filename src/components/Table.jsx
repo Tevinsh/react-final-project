@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
-import setPerson from "../store/actions/personAction";
 import { useSelector } from "react-redux";
+import setPerson from "../store/actions/personAction";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { afterError, afterSuccess, promptDelete } from "./SweetAlert";
 
 const Table = () => {
@@ -9,6 +10,10 @@ const Table = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const dummyKota = ['Jakarta','Bandung','Surabaya','Medan','Aceh','Palembang']
+
+    useEffect(()=>{
+        dispatch(setPerson())
+    },[])
 
     const handleDelete = (event) => {
          promptDelete().then((action)=>{
